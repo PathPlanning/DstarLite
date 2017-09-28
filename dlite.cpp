@@ -5,6 +5,10 @@ inline int vertex(Cell item, int size) {
     return item.x * size + item.y;
 }
 
+inline double euclid_dist(Cell a, Cell b) {
+    return sqrt(abs(a.x - b.x) * abs(a.x - b.x) + abs(a.y - b.y) * abs(a.y - b.y));
+}
+
 inline bool CutOrSqueeze(Node* to, Node* from) {
     if (to->point.x == from->point.x) {
         return (to->parent->point == Cell(from->point.x - 1, from->point.y) ||
@@ -22,8 +26,8 @@ double Dlite::GetCost(Cell from, Cell to, LocalMap &map) const {
     else return CN_SQRT_TWO;
 }
 
-Key Dlite::CalculateKey(const Node& vertex, LocalMap &map) {
-    Key res(std::min(vertex.g, vertex.rhs + hweight * heuristic(vertex.point, map.start, map) + Km), std::min(vertex.g, vertex.rhs));
+Key Dlite::CalculateKey(const Node& vertex) {
+    Key res(std::min(vertex.g, vertex.rhs + hweight * heuristic(vertex.point, start_point, opt.metrictype) + Km), std::min(vertex.g, vertex.rhs));
     return res;
 }
 
@@ -50,8 +54,9 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
         std::cout << "Done\n";
     std::cout << current_result.pathlength <<std::endl;
     while(start->point != goal->point) {
-        path.push_back(*start);
+        Cell jump = start->point;
         Node min_val = GetMinPredecessor(start, map);
+        path.push_back(*start);
         if (!min_val.parent) {
             OPEN.remove_if(start);
             current_result.pathfound = false;
@@ -60,14 +65,25 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
         } else {
             current_result.pathlength += GetCost(start->point, min_val.parent->point, map);
             start = min_val.parent;
-            //std::cout << "changed: "
-            //          << neighbor->point << ' ' << neighbor->parent->point << std::endl;
-            UpdateVertex(start, map);
         }
-
+        min_val = GetMinPredecessor(start, map);
+        while (opt.allowjump && euclid_dist(jump, min_val.parent->point) < radius && start->point != goal->point) {
+            path.push_back(*start);
+            if (!min_val.parent) {
+                OPEN.remove_if(start);
+                current_result.pathfound = false;
+                current_result.pathlength = 0;
+                return current_result;
+            } else {
+                current_result.pathlength += GetCost(start->point, min_val.parent->point, map);
+                start = min_val.parent;
+            }
+            min_val = GetMinPredecessor(start, map);
+        }
+        UpdateVertex(start);
         Changes changes = map.UpdateMap(const_map, start->point, radius);
         if (!changes.cleared.empty() && !changes.occupied.empty()) {
-            Km += heuristic(last->point, start->point, map);
+            Km += heuristic(last->point, start->point, opt.metrictype);
             last = start;
         }
         for (auto dam : changes.occupied) {
@@ -88,9 +104,9 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
                         } else {
                             neighbor->rhs = min_val.rhs;
                             neighbor->parent = min_val.parent;
-                            std::cout << "changed: "
-                                      << neighbor->point << ' ' << neighbor->parent->point << std::endl;
-                            UpdateVertex(neighbor, map);
+                           // std::cout << "changed: "
+                             //         << neighbor->point << ' ' << neighbor->parent->point << std::endl;
+                            UpdateVertex(neighbor);
                         }
                     }
                 }
@@ -107,7 +123,7 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
                cl->rhs = min_val.rhs;
                cl->parent = min_val.parent;
                cl->g = min_val.parent->g + GetCost(cl->point, min_val.parent->point, map);
-               UpdateVertex(cl, map);
+               UpdateVertex(cl);
            } else {
                break;
            }
@@ -115,7 +131,7 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
                if (neighbor->rhs > cl->g + GetCost(neighbor->point, cl->point, map)) {
                    neighbor->parent = cl;
                    neighbor->rhs = cl->g + GetCost(neighbor->point, cl->point, map);
-                   UpdateVertex(neighbor, map);
+                   UpdateVertex(neighbor);
                }
                if (neighbor->point.x == cl->point.x || neighbor->point.y == cl->point.y) {
                    Node min_val = GetMinPredecessor(neighbor, map);
@@ -131,7 +147,7 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
                        neighbor->parent = min_val.parent;
                        //std::cout << "changed: "
                        //          << neighbor->point << ' ' << neighbor->parent->point << std::endl;
-                       UpdateVertex(neighbor, map);
+                       UpdateVertex(neighbor);
                    }
                }
            }
@@ -160,10 +176,11 @@ void Dlite::Initialize(LocalMap &map)
 {
     Km = 0;
     Node start_node = Node(map.start);
+    start_point = map.start;
     Node goal_node = Node(map.goal);
     goal_node.rhs = 0;
     goal_node.g = std::numeric_limits<double>::infinity();
-    goal_node.key = CalculateKey(goal_node, map);
+    goal_node.key = CalculateKey(goal_node);
     NODES[vertex(map.goal, map.height)] = goal_node;
     goal = &(NODES.find(vertex(map.goal, map.height))->second);
 
@@ -177,10 +194,10 @@ void Dlite::Initialize(LocalMap &map)
     OPEN.put(goal);
 }
 
-void Dlite::UpdateVertex(Node* u, LocalMap &map)
+void Dlite::UpdateVertex(Node* u)
 {
     if (!(u->IsConsistent())) {
-        u->key = CalculateKey(*u, map);
+        u->key = CalculateKey(*u);
         //std::cout << "key: "<< u->key.k1 << " " << u->key.k2 << " " << u->point << std::endl;
         OPEN.put(u); //check if it is already there
     } else {
@@ -190,11 +207,11 @@ void Dlite::UpdateVertex(Node* u, LocalMap &map)
 
 bool Dlite::ComputeShortestPath(LocalMap &map)
 {
-    while (OPEN.top_key_less_than(CalculateKey(*start, map)) || start->rhs != start->g) {
+    while (OPEN.top_key_less_than(CalculateKey(*start)) || start->rhs != start->g) {
         ++number_of_steps;
         Node* current = OPEN.get();\
         Key old_key = current->key;
-        Key new_key = CalculateKey(*current, map);
+        Key new_key = CalculateKey(*current);
         if (old_key < new_key) {
             current->key = new_key;
             OPEN.put(current);
@@ -206,7 +223,7 @@ bool Dlite::ComputeShortestPath(LocalMap &map)
                     elem->parent = current;
                     elem->rhs = current->g + GetCost(elem->point, current->point, map);
                 }
-                UpdateVertex(elem, map); // !!!<-apparently OK
+                UpdateVertex(elem); // !!!<-apparently OK
             }
         } else {
             //double old_g = current->g;
@@ -220,13 +237,13 @@ bool Dlite::ComputeShortestPath(LocalMap &map)
                     if(min_val.parent)
                         elem->parent = min_val.parent;
                 }
-                UpdateVertex(elem, map);
+                UpdateVertex(elem);
             }
         }
-        if(current->parent) {
+        /*if(current->parent) {
             std::cout << current->point << "g " << current->g << " rhs" << current->rhs <<
                   current->parent->point << std::endl;
-        }     //std::cout << OPEN.top_key().k1 << std::endl;
+        }  */   //std::cout << OPEN.top_key().k1 << std::endl;
         //OPEN.print_elements();
 
     }
@@ -238,7 +255,7 @@ bool Dlite::ComputeShortestPath(LocalMap &map)
         MakePrimaryPath(start);
         std::cout << opt.cutcorners << std::endl;
         //current_result.lppath = &path;
-        map.PrintPath(curpath);
+        //map.PrintPath(curpath);
         //for (auto elem : curpath) path.push_back(elem);
         return true;
     } else {
@@ -320,25 +337,6 @@ std::list<Node> Dlite::FindNeighbors(Node* n, LocalMap &map) const {
                 successors.push_front(newNode);
             }
     return successors;
-    /*int x = n->point.x;
-    int y = n->point.y;
-    if(!opt.allowdiagonal) {
-        for (int k = y - 1; k <= y + 1; ++k) {
-            for (int l = x - 1; l <= x + 1; ++l) {
-                if (!(k == y && l == x) && map.CellIsNeighbor(Cell(l, k), n->point)) {
-                    result.push_back(Node(Cell(l, k), n));
-                }
-            }
-        }
-    } else {
-        for (int k = x - 1; k <= x + 1; ++k)
-            if (k != x && map.CellOnGrid(Cell(k, y)) && map.CellIsTraversable(Cell(k, y)))
-                result.push_back(Node(Cell(k, y), n));
-        for (int l = y - 1; l <= y + 1; ++l)
-            if (l != y && map.CellOnGrid(Cell(x, l)) && map.CellIsTraversable(Cell(x, l)))
-                result.push_back(Node(Cell(x, l), n));
-    }
-    return result;*/
 }
 
 std::list<Node*> Dlite::GetSurroundings(Node *current, LocalMap &map) {

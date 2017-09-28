@@ -20,12 +20,14 @@
 
     #define CNS_TAG_ALG             "algorithm"
         #define CNS_TAG_ST          "searchtype"
+        #define CNS_TAG_RA          "radius"
         #define CNS_TAG_HW          "hweight"
         #define CNS_TAG_MT          "metrictype"
         #define CNS_TAG_BT          "breakingties"
         #define CNS_TAG_AS          "allowsqueeze"
         #define CNS_TAG_AD          "allowdiagonal"
         #define CNS_TAG_CC          "cutcorners"
+        #define CNS_TAG_JU          "allowjump"
 
     #define CNS_TAG_OPT             "options"
         #define CNS_TAG_LOGLVL      "loglevel"
@@ -83,6 +85,7 @@
         #define CN_SP_ST_JP_SEARCH      3
         #define CN_SP_ST_TH             4
 
+
     #define CN_SP_AD 1 //AllowDiagonal
 
     #define CN_SP_CC 2 //CutCorners
@@ -104,6 +107,10 @@
     #define CN_SP_HW 5 //HeuristicWeight
 
     #define CN_SP_BT 6 //BreakingTies
+
+    #define CN_SP_RA 0 //Radius
+
+    #define CN_SP_JU 7 //AllowJump
 
         #define CNS_SP_BT_GMIN "g-min"
         #define CNS_SP_BT_GMAX "g-max"

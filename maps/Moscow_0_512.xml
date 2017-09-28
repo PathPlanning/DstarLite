@@ -524,13 +524,14 @@
         </grid>
     </map>
     <algorithm>
-        <searchtype>astar</searchtype>
+        <radius>20</radius>
         <hweight>1</hweight>
         <metrictype>euclid</metrictype>
         <breakingties>g-max</breakingties>
         <allowdiagonal>1</allowdiagonal>
         <allowsqueeze>1</allowsqueeze>
         <cutcorners>1</cutcorners>
+        <allowjump>1</allowjump>
     </algorithm>
     <options>
         <loglevel>1</loglevel>

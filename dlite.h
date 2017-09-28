@@ -37,15 +37,16 @@ private:
 
     double linecost;
     double hweight;
+    Cell start_point;
     SearchResult current_result;
     OpenList OPEN;
     std::unordered_map<int, Node> NODES;
 
     void Initialize(LocalMap &map);
-    void UpdateVertex(Node* u, LocalMap &map);
+    void UpdateVertex(Node* u);
     bool ComputeShortestPath(LocalMap &map);
     double GetCost(Cell from, Cell to, LocalMap &map) const;
-    Key CalculateKey(const Node &vertex, LocalMap &map);
+    Key CalculateKey(const Node &vertex);
 
     std::vector<Node *> GetSuccessors(Node *curr, LocalMap &map);
     std::list<Node *> GetSurroundings(Node *current, LocalMap &map);

@@ -25,10 +25,6 @@ class Map
         bool CellIsTraversable (Cell curr) const;
         bool CellOnGrid (Cell curr) const;
         bool CellIsObstacle(Cell cur) const;
-        bool CellIsNeighbor(Cell next, Cell curr) const;
-
-        bool Cut(Cell next, Cell current) const;
-        bool Squeeze(Cell next, Cell current) const;
 
         int * operator [] (int i);
         const int * operator [] (int i) const;
@@ -38,7 +34,6 @@ class Map
         int     height, width;
         Cell    start;
         Cell    goal;
-        EnvironmentOptions algorithm_info;
         double  CellSize;
 
 

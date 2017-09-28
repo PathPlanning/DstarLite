@@ -119,7 +119,6 @@ bool LocalMap::GetLocalMap(const Map &_map, Cell nstart, double radius) {
     start = _map.start;
     goal = _map.goal;
     CellSize = _map.CellSize;
-    algorithm_info = _map.algorithm_info;
     BuildGrid();
     for (int y = static_cast<int>(nstart.y - radius); y < static_cast<int>(nstart.y + radius); ++y) {
         for (int x = static_cast<int>(nstart.x - radius); x < static_cast<int>(nstart.x + radius); ++x) {

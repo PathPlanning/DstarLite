@@ -13,11 +13,12 @@ class Mission
 {
     public:
         Mission();
-        Mission (const char* fileName, double rad);
+        Mission (const char* fileName);
         ~Mission();
 
         bool getMap();
         bool getConfig();
+        bool getLocalMap();
         bool createLog();
         void createSearch();
         void createEnvironmentOptions();
@@ -26,7 +27,6 @@ class Mission
         void saveSearchResultsToLog();
 
     private:
-        const char* getAlgorithmName();
 
         Map                     map;
         LocalMap                localmap;
@@ -36,8 +36,6 @@ class Mission
         ILogger*                logger;
         const char*             fileName;
         SearchResult            sr;
-        bool                    correct;
-        double                  radius;
 };
 
 #endif

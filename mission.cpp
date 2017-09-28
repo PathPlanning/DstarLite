@@ -6,15 +6,12 @@ Mission::Mission()
 {
     logger = nullptr;
     fileName = nullptr;
-    correct = false;
 }
 
-Mission::Mission(const char *FileName, double rad)
+Mission::Mission(const char *FileName)
 {
     fileName = FileName;
     logger = nullptr;
-    correct = false;
-    radius = rad;
 }
 
 Mission::~Mission()
@@ -25,7 +22,12 @@ Mission::~Mission()
 
 bool Mission::getMap()
 {
-    return map.GetMap(fileName) && localmap.GetLocalMap(map, map.start, radius);
+    return map.GetMap(fileName);
+}
+
+bool Mission::getLocalMap()
+{
+    return localmap.GetLocalMap(map, map.start, config.SearchParams[CN_SP_RA]);
 }
 
 bool Mission::getConfig()
@@ -42,22 +44,15 @@ bool Mission::createLog()
 
 void Mission::createEnvironmentOptions()
 {
-    if (config.SearchParams[CN_SP_ST] == CN_SP_ST_BFS || config.SearchParams[CN_SP_ST] == CN_SP_ST_DIJK) {
-
-        options = EnvironmentOptions(config.SearchParams[CN_SP_AS], config.SearchParams[CN_SP_AD],
-                                     config.SearchParams[CN_SP_CC]);
-
-    }
-
-    else
-        options = EnvironmentOptions(config.SearchParams[CN_SP_AS], config.SearchParams[CN_SP_AD],
-                                     config.SearchParams[CN_SP_CC], config.SearchParams[CN_SP_MT]);
-    map.algorithm_info = options;
+    options = EnvironmentOptions(config.SearchParams[CN_SP_AS], config.SearchParams[CN_SP_AD],
+                                     config.SearchParams[CN_SP_CC], config.SearchParams[CN_SP_MT],
+                                         config.SearchParams[CN_SP_JU]);
+    //map.algorithm_info = options;
 }
 
 void Mission::createSearch()
 {
-    dlitesearch = Dlite(radius, config.SearchParams[CN_SP_HW]);
+    dlitesearch = Dlite(config.SearchParams[CN_SP_RA], config.SearchParams[CN_SP_HW]);
 }
 
 void Mission::startSearch()
@@ -86,26 +81,11 @@ void Mission::saveSearchResultsToLog()
     if (sr.pathfound) {
         logger->writeToLogPath(*sr.lppath);
         logger->writeToLogHPpath(*sr.hppath);
-        logger->writeToLogMap(map, *sr.lppath, true);
+        logger->writeToLogMap(localmap, *sr.lppath, true);
     } else {
-        logger->writeToLogMap(map, *sr.lppath, false);
+        logger->writeToLogMap(localmap, *sr.lppath, false);
         logger->writeToLogNotFound();
     }
     logger->saveLog();
 }
 
-const char *Mission::getAlgorithmName()
-{
-    if (config.SearchParams[CN_SP_ST] == CN_SP_ST_ASTAR)
-        return CNS_SP_ST_ASTAR;
-    else if (config.SearchParams[CN_SP_ST] == CN_SP_ST_DIJK)
-        return CNS_SP_ST_DIJK;
-    else if (config.SearchParams[CN_SP_ST] == CN_SP_ST_BFS)
-        return CNS_SP_ST_BFS;
-    else if (config.SearchParams[CN_SP_ST] == CN_SP_ST_JP_SEARCH)
-        return CNS_SP_ST_JP_SEARCH;
-    else if (config.SearchParams[CN_SP_ST] == CN_SP_ST_TH)
-        return CNS_SP_ST_TH;
-    else
-        return "";
-}

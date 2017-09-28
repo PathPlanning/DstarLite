@@ -3,12 +3,12 @@
 
 int main(int argc, char *argv[])
 {
-    if(argc < 3) {
+    if(argc < 2) {
         std::cout<<"Error! Pathfinding task file (XML) is not specified!"<<std::endl;
         return 0;
     }
 
-    Mission mission(argv[1], atof(argv[2]));
+    Mission mission(argv[1]);
 
     std::cout<<argv[1]<<std::endl;
     std::cout<<"Parsing the map from XML:"<<std::endl;
@@ -21,23 +21,28 @@ int main(int argc, char *argv[])
         if(!mission.getConfig())
             std::cout<<"Incorrect configurations! Program halted!"<<std::endl;
         else {
-            std::cout<<"Configurations OK!"<<std::endl<<"Creating log channel:"<<std::endl;
-
-            if(!mission.createLog())
-                std::cout<<"Log chanel has not been created! Program halted!"<<std::endl;
+            std::cout<<"Configurations OK!"<<std::endl<<"Creating local Map:"<<std::endl;
+            if(!mission.getLocalMap())
+                std::cout<<"Incorrect map! Program halted!"<<std::endl;
             else {
-                std::cout<<"Log OK!"<<std::endl<<"Start searching the path:"<<std::endl;
+                std::cout<<"Configurations OK!"<<std::endl<<"Creating logchannel:"<<std::endl;
 
-                mission.createEnvironmentOptions();
-                mission.createSearch();
-                mission.startSearch();
+                if(!mission.createLog())
+                    std::cout<<"Log chanel has not been created! Program halted!"<<std::endl;
+                else {
+                    std::cout<<"Log OK!"<<std::endl<<"Start searching the path:"<<std::endl;
 
-                std::cout<<"Search is finished!"<<std::endl;
+                    mission.createEnvironmentOptions();
+                    mission.createSearch();
+                    mission.startSearch();
 
-                mission.printSearchResultsToConsole();
-                mission.saveSearchResultsToLog();
+                    std::cout<<"Search is finished!"<<std::endl;
 
-                std::cout<<"Results are saved (if chosen) via created log channel."<<std::endl;
+                    mission.printSearchResultsToConsole();
+                    mission.saveSearchResultsToLog();
+
+                    std::cout<<"Results are saved (if chosen) via created log channel."<<std::endl;
+                }
             }
         }
     }

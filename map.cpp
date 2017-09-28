@@ -41,39 +41,6 @@ bool Map::CellOnGrid(Cell curr) const
     return (curr.y < height && curr.y >= 0 && curr.x < width && curr.x >= 0);
 }
 
-bool Map::Squeeze(Cell next, Cell current) const {
-    if (next.x == current.x || next.y == current.y) return 1;
-    if (algorithm_info.allowsqueeze) return 1;
-    if (next.x + 1 == current.x && next.y - 1 == current.y)
-        return !(Grid[current.y][current.x - 1] && Grid[current.y + 1][current.x]);
-    if (next.x + 1 == current.x && next.y + 1 == current.y)
-        return !(Grid[current.y][current.x - 1] && Grid[current.y - 1][current.x]);
-    if (next.x - 1 == current.x && next.y + 1 == current.y)
-        return !(Grid[current.y][current.x + 1] && Grid[current.y - 1][current.x]);
-    if (next.x - 1 == current.x && next.y - 1 == current.y)
-        return !(Grid[current.y][current.x + 1] && Grid[current.y + 1][current.x]);
-    return 0;
-}
-
-bool Map::Cut(Cell next, Cell current) const {
-    if (next.x == current.x || next.y == current.y) return 1;
-    if (algorithm_info.cutcorners) return 1;
-    if (next.x + 1 == current.x && next.y - 1 == current.y)
-        return !(Grid[current.y][current.x - 1] || Grid[current.y + 1][current.x]);
-    if (next.x + 1 == current.x && next.y + 1 == current.y)
-        return !(Grid[current.y][current.x - 1] || Grid[current.y - 1][current.x]);
-    if (next.x - 1 == current.x && next.y + 1 == current.y)
-        return !(Grid[current.y][current.x + 1] || Grid[current.y - 1][current.x]);
-    if (next.x - 1 == current.x && next.y - 1 == current.y)
-        return !(Grid[current.y][current.x + 1] || Grid[current.y + 1][current.x]);
-    return 0;
-}
-
-bool Map::CellIsNeighbor(Cell next, Cell current) const
-{
-    return CellOnGrid(next) && CellIsTraversable(next)
-            && Squeeze(next, current) && Cut(next, current);
-}
 
 void Map::BuildGrid() {
     Grid = new int * [height];
