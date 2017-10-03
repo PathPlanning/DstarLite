@@ -57,16 +57,19 @@ public:
     }
 
     inline Key top_key() {
+        bool exists;
         Key best_key(std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
         for (size_t i = 0; i < elements.size(); i++) {
 
             if (!elements[i].empty()) {
+                exists = true;
                 if (elements[i].front()->key < best_key) {
                    best_key = elements[i].front()->key;
                 }
             }
         }
-        return best_key;
+        if (exists) return best_key;
+        else return Key(std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
     }
     inline  bool top_key_less_than(Key cur_key) {
         bool exists = false;

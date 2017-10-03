@@ -19,7 +19,7 @@
             <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
             <row>0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0</row>
             <row>0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0</row>
-            <row>0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0</row>
+            <row>0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
             <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
             <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
             <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
@@ -30,14 +30,12 @@
         </grid>
     </map>
     <algorithm>
-        <radius>7</radius>
         <hweight>1</hweight>
         <metrictype>euclid</metrictype>
         <breakingties>g-max</breakingties>
         <allowdiagonal>1</allowdiagonal>
         <allowsqueeze>0</allowsqueeze>
-        <cutcorners>1</cutcorners>
-        <allowjump>1</allowjump>
+        <cutcorners>0</cutcorners>
     </algorithm>
     <options>
         <loglevel>1</loglevel>

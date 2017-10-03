@@ -83,7 +83,6 @@ void Mission::saveSearchResultsToLog()
         logger->writeToLogHPpath(*sr.hppath);
         logger->writeToLogMap(localmap, *sr.lppath, true);
     } else {
-        logger->writeToLogMap(localmap, *sr.lppath, false);
         logger->writeToLogNotFound();
     }
     logger->saveLog();

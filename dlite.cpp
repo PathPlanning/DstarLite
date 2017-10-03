@@ -153,13 +153,20 @@ SearchResult Dlite::FindThePath(LocalMap &map, const Map& const_map, Environment
            }
         }
         if(ComputeShortestPath(map)){
-            std::cout << "ALL OK\n";
-        } else
-            std::cout << "NOT OK\n";
+            //std::cout << "ALL OK\n";
+            continue;
+        } else {
+            std::cout << "NOT OK"  << std::endl;
+            if (OPEN.top_key() == Key(std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity())) {
+                current_result.pathfound = false;
+                current_result.pathlength = 0;
+                break;
+            }
+        }
     }
     end = std::chrono::system_clock::now();
     current_result.time = static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(end - tstart).count()) / 1000000000;
-    map.PrintPath(path);
+    //map.PrintPath(path);
     current_result.lppath = &path;
     if (current_result.pathfound) {
         makeSecondaryPath();
@@ -251,9 +258,8 @@ bool Dlite::ComputeShortestPath(LocalMap &map)
         current_result.pathfound = true;
         current_result.numberofsteps = number_of_steps;
         current_result.nodescreated = NODES.size();
-        std::cout << start->rhs << std::endl;
-        MakePrimaryPath(start);
-        std::cout << opt.cutcorners << std::endl;
+        //std::cout << start->rhs << std::endl;
+        //MakePrimaryPath(start);
         //current_result.lppath = &path;
         //map.PrintPath(curpath);
         //for (auto elem : curpath) path.push_back(elem);
@@ -261,6 +267,7 @@ bool Dlite::ComputeShortestPath(LocalMap &map)
     } else {
         current_result.pathfound = false;
         current_result.pathlength = 0;
+        return false;
     }
     return false;
 }

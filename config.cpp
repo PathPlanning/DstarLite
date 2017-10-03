@@ -141,8 +141,8 @@ bool Config::getConfig(const char *FileName)
 
         if (check != "1" && check != "true" && check != "0" && check != "false") {
             std::cout << "Warning! Value of '" << CNS_TAG_JU << "' is not correctly specified." << std::endl;
-            std::cout << "Value of '" << CNS_TAG_JU << "' was defined to default - true " << std::endl;
-            SearchParams[CN_SP_JU] = 1;
+            std::cout << "Value of '" << CNS_TAG_JU << "' was defined to default - false " << std::endl;
+            SearchParams[CN_SP_JU] = 0;
         }
         else if (check == "1" || check == "true")
             SearchParams[CN_SP_JU] = 1;
