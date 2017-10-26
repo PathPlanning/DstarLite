@@ -1,4 +1,4 @@
-# Dynamic A\* Lite
+# D\* Lite
 D\* Lite is an incremental heuristic search algorithm that builds on LPA\*, an incremental heuristic search algorithm that combines ideas of A\* and Dynamic SWSF-FP algorithm for single-shot grid-based 2D path finding. 
 
 ## Description
