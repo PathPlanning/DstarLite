@@ -11,7 +11,7 @@ Current implementation use single-shot grid-based 2D environment to build path f
 Line of sight of a travelling agent defines by radius. 
 Algorithm uses LPA\* to build path depending on the current knowledge about the surroundings, then, after the move and corresponded cell changes algorithm rebuilds part of the path according to the changes.
 
-Algorithm supports XML files as input and output format. Input file contains map and environment representation (see *"Input and Output files"* or [samples](https://bitbucket.org/nsoboleva2/d-lite/src/42e3e490eab6b0b4322796bd4f92e5667c93ae91/maps/?at=master))
+Algorithm supports XML files as input and output format. Input file contains map and environment representation (see *"Input and Output files"* or [samples](https://github.com/PathPlanning/DstarLite/tree/master/maps))
 
 ## Getting Started 
 
@@ -32,7 +32,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 Download current repository to your local machine. Use
 ```
-git clone https://nsoboleva2@bitbucket.org/nsoboleva2/d-lite.git
+git clone https://github.com/PathPlanning/DstarLite.git
 ```
 or direct downloading.
 
@@ -48,7 +48,7 @@ Output file will be named:
 `
 initial_file_name_log.xml
 `
-For more detailed information there are some samples in the  [samples](https://bitbucket.org/nsoboleva2/d-lite/src/42e3e490eab6b0b4322796bd4f92e5667c93ae91/maps/?at=master) folder.
+For more detailed information there are some samples in the  [samples](https://github.com/PathPlanning/DstarLite/tree/master/maps) folder.
 
 ## Input and Output files
 
