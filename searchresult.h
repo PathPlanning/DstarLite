@@ -2,6 +2,12 @@
 #define SEARCHRESULT_H
 #include <list>
 #include "node.h"
+
+struct Changes {
+    std::list<Cell> occupied;
+    std::list<Cell> cleared;
+};
+
 struct SearchResult
 {
         bool pathfound;

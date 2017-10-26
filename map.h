@@ -5,8 +5,8 @@
 #include "environmentoptions.h"
 #include "gl_const.h"
 #include <list>
-#include "structures.h"
 #include "tinyxml2.h"
+#include "searchresult.h"
 #include <sstream>
 #include <string>
 #include <algorithm>
@@ -20,7 +20,6 @@ class Map
         Map(const Map& orig);
         ~Map();
 
-        Changes DamageTheMap(std::list<Node> path);
         bool GetMap(const char *name);
         bool CellIsTraversable (Cell curr) const;
         bool CellOnGrid (Cell curr) const;

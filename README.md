@@ -1,4 +1,7 @@
 # D\* Lite
+
+[![Build Status](https://travis-ci.org/PathPlanning/DstarLite.svg?branch=master)](https://travis-ci.org/PathPlanning/DstarLite)
+
 D\* Lite is an incremental heuristic search algorithm that builds on LPA\*, an incremental heuristic search algorithm that combines ideas of A\* and Dynamic SWSF-FP algorithm for single-shot grid-based 2D path finding. 
 
 ## Description
@@ -33,10 +36,18 @@ git clone https://nsoboleva2@bitbucket.org/nsoboleva2/d-lite.git
 ```
 or direct downloading.
 
-Built current project using **Qt Creator** or **CMake**. To launch the compiled file you will need to pass input XML file as an argument. Output file for this project will be placed in the same folder as input file and, by default, will be named `_log.xml`. For examlpe, 
+Built current project using **Qt Creator** or **CMake**. To launch the compiled file you will need to pass input XML file as an argument. Output file for this project will be placed in the same folder as input file and, by default, will be named `_log.xml`. For examlpe, using CMake 
+```bash
+cd PATH_TO_THE_PROJECT
+cmake .
+make
+
+./LPAstar initial_file_name.xml
 ```
-"initial_file_name.xml" -> "initial_file_name_log.xml"
-```
+Output file will be named:
+`
+initial_file_name_log.xml
+`
 For more detailed information there are some samples in the  [samples](https://bitbucket.org/nsoboleva2/d-lite/src/42e3e490eab6b0b4322796bd4f92e5667c93ae91/maps/?at=master) folder.
 
 ## Input and Output files

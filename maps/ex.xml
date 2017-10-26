@@ -20,13 +20,12 @@
 	</grid>
     </map>
     <algorithm>
-        <searchtype>astar</searchtype>
         <hweight>1</hweight>
         <metrictype>euclid</metrictype>
-        <breakingties>g-max</breakingties>
         <allowdiagonal>1</allowdiagonal>
         <allowsqueeze>false</allowsqueeze>
         <cutcorners>true</cutcorners>
+        <radius>2</radius>
     </algorithm>
     <options>
         <loglevel>1</loglevel>

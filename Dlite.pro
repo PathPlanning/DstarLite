@@ -1,7 +1,16 @@
+TARGET = DLite
 TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
+
+
+QMAKE_CXXFLAGS += -std=c++11 -O2 -Wall -Wextra
+
+win32 {
+QMAKE_LFLAGS += -static -static-libgcc -static-libstdc++
+}
+
 
 SOURCES += main.cpp \
     config.cpp \
@@ -26,7 +35,6 @@ HEADERS += \
     node.h \
     openlist.h \
     searchresult.h \
-    structures.h \
     tinyxml2.h \
     xmllogger.h \
     dlite.h \

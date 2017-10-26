@@ -1,0 +1,23 @@
+language: cpp
+  
+matrix:
+ include:
+  - os: linux
+    dist: trusty
+    sudo: required
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-4.9
+    env:
+     - MATRIX_EVAL="CC=gcc-4.9"
+  
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+

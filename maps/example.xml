@@ -32,10 +32,11 @@
     <algorithm>
         <hweight>1</hweight>
         <metrictype>euclid</metrictype>
-        <breakingties>g-max</breakingties>
-        <allowdiagonal>1</allowdiagonal>
-        <allowsqueeze>0</allowsqueeze>
-        <cutcorners>0</cutcorners>
+        <allowdiagonal>true</allowdiagonal>
+        <allowsqueeze>false</allowsqueeze>
+        <cutcorners>true</cutcorners>
+        <allowjump>false</allowjump>
+        <radius>15</radius>
     </algorithm>
     <options>
         <loglevel>1</loglevel>
